@@ -22,21 +22,28 @@ def encode_message():
 
 # encodes a target file, similarly to encode_message, except now targeting a filename
 def encode_file():
-        fresponse = ""
-        t = 1
-        while t == 1:
-            try:
-                tryfile = open(input("What text do you wanna access?"))
-                fcipherkey = int(input("Enter the rotational cipher key:"))
-                t = 0
-                for char in tryfile:
-                    f_letter = alphabet[(alphabet.index(char) + fcipherkey) % 26]
-                    fresponse += f_letter
-                    print(fcipherkey)
+    response = ""
+    t = 1
+    while t == 1:
+        try:
+            userfile = input("What text do you wanna access?")
+            contentfile = open(userfile, "r")
+            usefulconentfile = contentfile.read()
+            fcipherkey = int(input("Enter the rotational cipher key:"))
+            t = 0
+        except FileNotFoundError:
+            print("you typed it WRONG.")
 
-            except FileNotFoundError:
-                print("you typed it WRONG.")
-        f.close()
+
+            for char in usefulconentfile:
+                letter = alphabet[(alphabet.index(char) + fcipherkey) % 26]
+                response += letter
+            print(response)
+
+
+    contentfile.close()
+
+
 
 # decodes target file using a user-specified key. If key is unknown, a keypress should
 # call decode_unknown_key()
