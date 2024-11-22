@@ -12,36 +12,38 @@ alphabet = "abcdefghijklmnopqrstuvwxyz"
 # user inputs a message and selects a key (or random), the message is then translated using the cipher
 def encode_message():
     response = ""
-    custominput = (input("Enter the message here:"))
+    custominput = (input("Enter the message here:").lower())
     cipherkey = int(input("Enter the rotational cipher key:"))
     for char in custominput:
-        letter = alphabet[(alphabet.index(char) + cipherkey) % 26]
-        response += letter
+        try:
+            letter = alphabet[(alphabet.index(char) + cipherkey) % 26]
+            response += letter
+        except ValueError:
+            response += char
     print(response)
-    pass
 
 # encodes a target file, similarly to encode_message, except now targeting a filename
 def encode_file():
-    response = ""
-    t = 1
-    while t == 1:
-        try:
+    userfile = input("What text do you wanna access?")
+    contentfile = open(userfile, "r")
+    try:
+        with open(userfile, 'r') as file:
+            usefulconentfile = contentfile.read()
+    except FileNotFoundError:
+        print(f"The file does not exist.")
+
             userfile = input("What text do you wanna access?")
             contentfile = open(userfile, "r")
-            usefulconentfile = contentfile.read()
             fcipherkey = int(input("Enter the rotational cipher key:"))
-            t = 0
-        except FileNotFoundError:
-            print("you typed it WRONG.")
 
 
-            for char in usefulconentfile:
+        for char in usefulconentfile:
+            try:
                 letter = alphabet[(alphabet.index(char) + fcipherkey) % 26]
-                response += letter
-            print(response)
-
-
-    contentfile.close()
+                fresponse += letter
+            except ValueError:
+                fresponse += char
+        print(fresponse)
 
 
 
