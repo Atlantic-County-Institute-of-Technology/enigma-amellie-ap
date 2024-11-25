@@ -22,42 +22,111 @@ def encode_message():
             response += char
     print(response)
 
-# encodes a target file, similarly to encode_message, except now targeting a filename
-def encode_file():
-    userfile = input("What text do you wanna access?")
-    contentfile = open(userfile, "r")
-    try:
-        with open(userfile, 'r') as file:
-            usefulconentfile = contentfile.read()
-    except FileNotFoundError:
-        print(f"The file does not exist.")
 
+
+# encodes a target file, similarly to encode_message, except now targeting a filename
+# def encode_file():
+def encode_file():
+    fresponse = ""
+    t = 0
+    while t == 0:
+        try:
             userfile = input("What text do you wanna access?")
             contentfile = open(userfile, "r")
-            fcipherkey = int(input("Enter the rotational cipher key:"))
+            usefulconentfile = contentfile.read()
+            fcipherkey = (int("What is the rotation key"))
+            t = 1
+            for char in usefulconentfile:
+                try:
+                    letter = alphabet[(alphabet.index(char) + fcipherkey) % 26]
+                    fresponse += letter
+                except ValueError:
+                    fresponse += char
 
+                contentfile = open(userfile, "w")
+                contentfile.write(fresponse)
+                contentfile = open(userfile, "r")
 
-        for char in usefulconentfile:
-            try:
-                letter = alphabet[(alphabet.index(char) + fcipherkey) % 26]
-                fresponse += letter
-            except ValueError:
-                fresponse += char
-        print(fresponse)
+                print(contentfile.read())
+                contentfile.close()
+
+        except FileNotFoundError:
+            print("File not found.")
 
 
 
 # decodes target file using a user-specified key. If key is unknown, a keypress should
 # call decode_unknown_key()
 def decode_file():
-    pass
+    dfresponse = ""
+    t = 0
+    while t == 0:
+        try:
+            dfuserfile = input("What text do you wanna access?")
+            dfcontentfile = open(dfuserfile, "r")
+            dfusefulconentfile = dfcontentfile.read()
+            redirect = (input("Is the key known? (y/N)").lower())
+            if redirect == "y":
+                dfcipherkey = int(input("Enter the rotational cipher key:"))
+
+                for char in dfusefulconentfile:
+                    try:
+                        dfletter = alphabet[(alphabet.index(char) - dfcipherkey) % 26]
+                        dfresponse += dfletter
+                    except ValueError:
+                        dfresponse += char
+
+                dfcontentfile = open(dfuserfile, "w")
+                dfcontentfile.write(dfresponse)
+                dfcontentfile = open(dfuserfile, "r")
+
+                print("Your file has been decoded!")
+
+            else:
+                decode_unknown_key(dfuserfile)
+
+
+        except FileNotFoundError:
+            print("File not found.")
+
+
+
 
 # runs if the key is unknown. If this is true, print out all possible decoding combinations.
 def decode_unknown_key(filename):
-   pass
+    ex_len = 48
+    df_contentfile = open(filename, "r")
+    df_usefulcontentfile = df_contentfile.read()
+
+    for i in range(26):
+        initialmessage = ""
+        try:
+            for char in df_usefulcontentfile[:ex_len]:
+                try:
+                    df_letter = alphabet[(alphabet.index(char) + i) % 26]
+                    initialmessage += df_letter
+                except ValueError:
+                    initialmessage += char
+        except IndexError:
+            ex_len = ex_len - 1
+    print(initialmessage)
+    confirmation = input("Did i get it right?..... y/N")
+    if confirmation == "y":
+        key = i
+        confirmedmessage = ""
+        for char in df_usefulcontentfile:
+            try:
+                df_letter = alphabet[(alphabet.index(char) + key) % 26]
+                confirmedmessage += df_letter
+            except ValueError:
+                confirmedmessage += char
+        df_contentfile = open(filename, "w")
+        df_contentfile.write(confirmedmessage)
+        print("Your text has been decoded")
+        filename.close()
 
 
-# main method declaration
+
 def main():
     while True:
         print(f"Welcome to the Enigma Machine!\n"
